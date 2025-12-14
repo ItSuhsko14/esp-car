@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include <WiFi.h>
 
-const char* ssid = "PHONE_HOTSPOT";
-const char* password = "PASSWORD";
+const char* ssid = "Pixel";
+const char* password = "naspiatero";
 
 void setup() {
     Serial.begin(115200);
