@@ -54,8 +54,8 @@ bool cameraInit() {
     // Налаштування якості та роздільності
     if(psramFound()){
         Serial.println("PSRAM found");
-        config.frame_size = FRAMESIZE_SVGA; // 800x600 для OV3660
-        config.jpeg_quality = 10;
+        config.frame_size = FRAMESIZE_VGA; // 640x480 - оптимально для streaming
+        config.jpeg_quality = 12; // 10-15 оптимально (менше число = краща якість, більший розмір)
         config.fb_count = 2;
         config.fb_location = CAMERA_FB_IN_PSRAM;
     } else {
