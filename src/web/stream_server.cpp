@@ -1,4 +1,5 @@
 #include "stream_server.h"
+#include "web_server.h"
 #include "../camera/camera_manager.h"
 #include <WebServer.h>
 #include <WiFi.h>
@@ -36,8 +37,8 @@ void handleStream() {
     headers += "\r\n";
     client.write((uint8_t*)headers.c_str(), headers.length());
     
-    // Безкінечний цикл streaming
-    while (client.connected()) {
+    // Streaming loop - зупиняється при OTA
+    while (client.connected() && !otaInProgress) {
         camera_fb_t * fb = cameraCapture();
         if (!fb) {
             Serial.println("Camera capture failed");
@@ -68,15 +69,16 @@ void handleStream() {
             float fps = (frameCount * 1000.0) / elapsed;
             Serial.printf("Streaming FPS: %.1f\n", fps);
         }
-        
-        if (!client.connected()) {
-            break;
-        }
     }
     
     unsigned long elapsed = millis() - startTime;
     float avgFps = (frameCount * 1000.0) / elapsed;
-    Serial.printf("Stream stopped. Average FPS: %.1f, Total frames: %lu\n", avgFps, frameCount);
+    
+    if (otaInProgress) {
+        Serial.println("Stream stopped for OTA update");
+    } else {
+        Serial.printf("Stream stopped. Average FPS: %.1f, Total frames: %lu\n", avgFps, frameCount);
+    }
 }
 
 void streamServerInit() {

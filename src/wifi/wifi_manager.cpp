@@ -1,14 +1,30 @@
 #include "wifi_manager.h"
 #include <WiFi.h>
+#include <WiFiMulti.h>
 #include <Arduino.h>
 
-static const char* ssid = "Pixel";
-static const char* password = "naspiatero";
+WiFiMulti wifiMulti;
+
+// Налаштування WiFi мереж (SSID, Password)
+// WiFiMulti автоматично вибере найсильнішу доступну
+#define WIFI_NETWORK_1_SSID     "Pixel"
+#define WIFI_NETWORK_1_PASS     "naspiatero"
+
+#define WIFI_NETWORK_2_SSID     "netis_406223"
+#define WIFI_NETWORK_2_PASS     "naspiatero"
+
+#define WIFI_NETWORK_3_SSID     "Myroslav"
+#define WIFI_NETWORK_3_PASS     "naspiatero"
 
 void wifiInit() {
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
     delay(100);
+    
+    // Додаємо всі мережі
+    wifiMulti.addAP(WIFI_NETWORK_1_SSID, WIFI_NETWORK_1_PASS);
+    wifiMulti.addAP(WIFI_NETWORK_2_SSID, WIFI_NETWORK_2_PASS);
+    wifiMulti.addAP(WIFI_NETWORK_3_SSID, WIFI_NETWORK_3_PASS);
     
     Serial.println("\n=== WiFi Scan ===");
     int n = WiFi.scanNetworks();
@@ -22,12 +38,10 @@ void wifiInit() {
     }
     Serial.println("=================\n");
     
-    Serial.print("Connecting to: ");
-    Serial.println(ssid);
-    WiFi.begin(ssid, password);
-
+    Serial.println("Connecting to best available network...");
+    
     int attempts = 0;
-    while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+    while (wifiMulti.run() != WL_CONNECTED && attempts < 20) {
         delay(500);
         Serial.print(".");
         attempts++;
@@ -35,10 +49,15 @@ void wifiInit() {
 
     if (WiFi.status() == WL_CONNECTED) {
         Serial.println("\nConnected!");
+        Serial.print("Network: ");
+        Serial.println(WiFi.SSID());
         Serial.print("IP: ");
         Serial.println(WiFi.localIP());
+        Serial.print("Signal: ");
+        Serial.print(WiFi.RSSI());
+        Serial.println(" dBm");
     } else {
-        Serial.println("\nFailed to connect!");
+        Serial.println("\nFailed to connect to any network!");
         Serial.print("WiFi status: ");
         Serial.println(WiFi.status());
     }

@@ -16,32 +16,32 @@ void motorInit() {
 }
 
 void motorForward() {
-    digitalWrite(MOTOR_LEFT_FWD, HIGH);
-    digitalWrite(MOTOR_LEFT_BWD, LOW);
-    digitalWrite(MOTOR_RIGHT_FWD, HIGH);
-    digitalWrite(MOTOR_RIGHT_BWD, LOW);
-}
-
-void motorBackward() {
     digitalWrite(MOTOR_LEFT_FWD, LOW);
     digitalWrite(MOTOR_LEFT_BWD, HIGH);
     digitalWrite(MOTOR_RIGHT_FWD, LOW);
     digitalWrite(MOTOR_RIGHT_BWD, HIGH);
 }
 
-void motorLeft() {
-    // Turn left: right wheels forward, left wheels stop
-    digitalWrite(MOTOR_LEFT_FWD, LOW);
+void motorBackward() {
+    digitalWrite(MOTOR_LEFT_FWD, HIGH);
     digitalWrite(MOTOR_LEFT_BWD, LOW);
     digitalWrite(MOTOR_RIGHT_FWD, HIGH);
     digitalWrite(MOTOR_RIGHT_BWD, LOW);
 }
 
-void motorRight() {
-    // Turn right: left wheels forward, right wheels stop
+void motorLeft() {
+    // Tank turn left: right wheels forward, left wheels backward
     digitalWrite(MOTOR_LEFT_FWD, HIGH);
     digitalWrite(MOTOR_LEFT_BWD, LOW);
     digitalWrite(MOTOR_RIGHT_FWD, LOW);
+    digitalWrite(MOTOR_RIGHT_BWD, HIGH);
+}
+
+void motorRight() {
+    // Tank turn right: left wheels forward, right wheels backward
+    digitalWrite(MOTOR_LEFT_FWD, LOW);
+    digitalWrite(MOTOR_LEFT_BWD, HIGH);
+    digitalWrite(MOTOR_RIGHT_FWD, HIGH);
     digitalWrite(MOTOR_RIGHT_BWD, LOW);
 }
 
